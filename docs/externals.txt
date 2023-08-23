@@ -1,0 +1,7 @@
+Note: Please use the requirements.txt file when setting up a virtual environment.
+The purpose of this document is to outline the external dependencies I directly
+installed via pip.
+
+---
+
+moviepy
