@@ -2,6 +2,8 @@ import movReader
 from movReader import MOV_EXTENSION
 import os
 from waveform import Waveform
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def main():
@@ -16,6 +18,12 @@ def main():
     print("Number of frames: ", waveform.num_frames)
     print("Time (s): ", waveform.get_audio_sample_time())
     print("Compression type: ", waveform.compression_type)
+
+    for signal in waveform.get_signal():
+        time = len(signal) / waveform.framerate
+        plt.plot(np.linspace(0, time, num=len(signal)), signal)
+
+    plt.show()
 
 
 if __name__ == '__main__':
