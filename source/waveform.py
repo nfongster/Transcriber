@@ -6,14 +6,6 @@ class Waveform:
     """
     Represents the data extracted from a single .wav file.
     """
-    filepath = ""
-    num_channels = 1
-    sample_width = 1
-    framerate = 1
-    num_frames = 1
-    compression_type = ""
-    _raw_signal = bytes()
-
     def __init__(self, path):
         self.filepath = path
         with wave.open(self.filepath, mode='rb') as stream:
