@@ -1,5 +1,6 @@
 import movReader
 from movReader import MOV_EXTENSION
+from test import transcribe
 import os
 from waveform import Waveform
 import matplotlib.pyplot as plt
@@ -24,6 +25,12 @@ def main():
         plt.plot(np.linspace(0, time, num=len(signal)), signal)
 
     plt.show()
+
+    # TODO: average the 2 channels
+    #text = transcribe(waveform._raw_signal, waveform.framerate)
+    left, right = waveform.get_raw_signals()
+    text = transcribe(right, waveform.framerate)
+    print(text)
 
 
 if __name__ == '__main__':

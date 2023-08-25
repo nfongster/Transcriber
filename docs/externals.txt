@@ -7,3 +7,4 @@ installed via pip.
 moviepy
 matplotlib
 numpy
+vosk

@@ -31,3 +31,8 @@ class Waveform:
         """
         signal = np.frombuffer(self._raw_signal, dtype="int16")
         return list(signal[ch::self.num_channels] for ch in range(self.num_channels))
+
+    def get_raw_signals(self):
+        signal = np.frombuffer(self._raw_signal, dtype="int16")
+        signals = list(signal[ch::self.num_channels] for ch in range(self.num_channels))
+        return bytes(signals[0]), bytes(signals[1])
