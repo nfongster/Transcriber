@@ -7,6 +7,10 @@ class Waveform:
     Represents the data extracted from a single .wav file.
     """
     def __init__(self, path):
+        """
+        Creates a new waveform object.
+        :param path: Full path to the source *.wav file.
+        """
         self.filepath = path
         with wave.open(self.filepath, mode='rb') as stream:
             self.num_channels = stream.getnchannels()
