@@ -1,63 +1,65 @@
-import movReader
+import tkinter as tk
+from tkinter import filedialog
 from movReader import MOV_EXTENSION, WAV_EXTENSION
-from transcriber import transcribe
-import os
-from waveform import Waveform
-import matplotlib.pyplot as plt
-import numpy as np
-import wave
-import json
-from collections import deque
 
 
 def main():
-    print("Enter *.mov filename, without the extension: ")
-    mov_filename = input() + MOV_EXTENSION
-    wav_filepath = movReader.extract_audio(os.path.join(os.path.curdir, mov_filename))
+    window = tk.Tk()
+    window.geometry("700x350")
+    window.resizable(False, False)
+    window.title("Transcriber")
 
-    # print("Enter *.wav filename, without the extension: ")
-    # wav_filename = input() + WAV_EXTENSION
-    # wav_filepath = os.path.join(os.path.curdir, wav_filename)
+    left_frame = tk.Frame(bg="blue")
+    right_frame = tk.Frame(bg="green")
 
-    waveform = Waveform(wav_filepath)
-    print("Filepath: ", waveform.filepath)
-    print("Number of channels: ", waveform.num_channels)
-    print("Sample width: ", waveform.sample_width)
-    print("Sampling frequency (Hz): ", waveform.framerate)
-    print("Number of frames: ", waveform.num_frames)
-    print("Time (s): ", waveform.get_audio_sample_time())
-    print("Compression type: ", waveform.compression_type)
+    source_file_frame = tk.Frame(master=left_frame)
+    output_dir_frame = tk.Frame(master=left_frame)
+    model_dir_frame = tk.Frame(master=left_frame)
+    transcribe_btn_frame = tk.Frame(master=left_frame)
 
-    for signal in waveform.get_signal():
-        time = len(signal) / waveform.framerate
-        plt.plot(np.linspace(0, time, num=len(signal)), signal)
-    plt.show()
+    def open_file():
+        file_path = filedialog.askopenfilename(
+            filetypes=[("WAV Files", f"*{WAV_EXTENSION}"), ("MOV Files", f"*{MOV_EXTENSION}")]
+        )
+        if file_path:
+            ety_source_file.configure(state="normal")
+            ety_source_file.delete(0, tk.END)
+            ety_source_file.insert(0, file_path)
+            ety_source_file.configure(state="readonly")
 
-    left, right = waveform.get_raw_signals()
-    result = transcribe(right, waveform.framerate)  # TODO: average the 2 channels
-    json_result = json.loads(result)
-    for text in json_result.values():
-        print(text)
+    def open_folder():
+        folder_path = filedialog.askdirectory()
+        if folder_path:
+            ety_output_dir.configure(state="normal")
+            ety_output_dir.delete(0, tk.END)
+            ety_output_dir.insert(0, folder_path)
+            ety_output_dir.configure(state="readonly")
 
-    words_per_line = 5
+    btn_source_file = tk.Button(master=source_file_frame, text="File location (*.wav or *.mov)", command=open_file)
+    ety_source_file = tk.Entry(master=source_file_frame, state="readonly", width=60)
 
-    with open("result.txt", 'w') as file:
-        for text in json_result.values():
-            text = deque(text.split(' '))
-            while len(text) >= words_per_line:
-                for i in range(words_per_line):
-                    file.write(text.popleft() + ' ')
-                file.writelines('\n')
+    btn_output_dir = tk.Button(master=output_dir_frame, text="Output directory", command=open_folder)
+    ety_output_dir = tk.Entry(master=output_dir_frame, state="readonly", width=60)
 
-            for word in text:
-                file.write(word + ' ')
+    # label2 = tk.Label(master=output_dir_frame, text="Second Label")
+    # label3 = tk.Label(master=model_dir_frame, text="Third Label")
+    # btn_transcribe = tk.Button(master=transcribe_btn_frame, text="Transcribe")
 
-    with wave.open('combined_single_channel.wav', 'wb') as wav_file:
-        wav_file.setnchannels(1)
-        wav_file.setsampwidth(waveform.sample_width)
-        wav_file.setframerate(waveform.framerate)
-        wav_file.setnframes(waveform.num_frames)
-        wav_file.writeframes(left)
+    btn_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+    ety_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
+    btn_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+    ety_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
+    # btn_transcribe.pack()
+
+    label4 = tk.Label(master=right_frame, text="Fourth Label")
+    label4.pack()
+
+    source_file_frame.pack(padx=5, pady=5, fill=tk.X)
+    output_dir_frame.pack(padx=5, pady=5, fill=tk.X)
+    left_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+    right_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
+
+    window.mainloop()
 
 
 if __name__ == '__main__':
