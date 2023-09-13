@@ -3,6 +3,26 @@ from tkinter import filedialog
 from movReader import MOV_EXTENSION, WAV_EXTENSION
 
 
+def open_file(entry):
+    file_path = filedialog.askopenfilename(
+        filetypes=[("WAV Files", f"*{WAV_EXTENSION}"), ("MOV Files", f"*{MOV_EXTENSION}")]
+    )
+    if file_path:
+        entry.configure(state="normal")
+        entry.delete(0, tk.END)
+        entry.insert(0, file_path)
+        entry.configure(state="readonly")
+
+
+def open_folder(entry):
+    folder_path = filedialog.askdirectory()
+    if folder_path:
+        entry.configure(state="normal")
+        entry.delete(0, tk.END)
+        entry.insert(0, folder_path)
+        entry.configure(state="readonly")
+
+
 def main():
     window = tk.Tk()
     window.geometry("700x350")
@@ -17,29 +37,15 @@ def main():
     model_dir_frame = tk.Frame(master=left_frame)
     transcribe_btn_frame = tk.Frame(master=left_frame)
 
-    def open_file():
-        file_path = filedialog.askopenfilename(
-            filetypes=[("WAV Files", f"*{WAV_EXTENSION}"), ("MOV Files", f"*{MOV_EXTENSION}")]
-        )
-        if file_path:
-            ety_source_file.configure(state="normal")
-            ety_source_file.delete(0, tk.END)
-            ety_source_file.insert(0, file_path)
-            ety_source_file.configure(state="readonly")
-
-    def open_folder():
-        folder_path = filedialog.askdirectory()
-        if folder_path:
-            ety_output_dir.configure(state="normal")
-            ety_output_dir.delete(0, tk.END)
-            ety_output_dir.insert(0, folder_path)
-            ety_output_dir.configure(state="readonly")
-
-    btn_source_file = tk.Button(master=source_file_frame, text="File location (*.wav or *.mov)", command=open_file)
     ety_source_file = tk.Entry(master=source_file_frame, state="readonly", width=60)
+    btn_source_file = tk.Button(master=source_file_frame,
+                                text="File location (*.wav or *.mov)",
+                                command=lambda: open_file(ety_source_file))
 
-    btn_output_dir = tk.Button(master=output_dir_frame, text="Output directory", command=open_folder)
     ety_output_dir = tk.Entry(master=output_dir_frame, state="readonly", width=60)
+    btn_output_dir = tk.Button(master=output_dir_frame,
+                               text="Output directory",
+                               command=lambda: open_folder(ety_output_dir))
 
     # label2 = tk.Label(master=output_dir_frame, text="Second Label")
     # label3 = tk.Label(master=model_dir_frame, text="Third Label")
