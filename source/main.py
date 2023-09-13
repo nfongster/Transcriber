@@ -111,8 +111,20 @@ def main():
 
     channel = tk.IntVar(value=0)  # 0 for left, 1 for right
 
-    left_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame, text="Left", variable=channel, value=0)
-    right_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame, text="Right", variable=channel, value=1)
+    radio_button_label = tk.Label(master=transcribe_btn_frame,
+                                  text="Channel (if stereo):",
+                                  bg=BACKGROUND_COLOR)
+    left_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame,
+                                            text="Left",
+                                            bg=BACKGROUND_COLOR,
+                                            variable=channel,
+                                            value=0)
+
+    right_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame,
+                                             text="Right",
+                                             bg=BACKGROUND_COLOR,
+                                             variable=channel,
+                                             value=1)
 
     btn_transcribe = tk.Button(master=transcribe_btn_frame,
                                text="Transcribe",
@@ -123,9 +135,10 @@ def main():
                                                           ety_model_dir.get(),
                                                           diagnostic_log,
                                                           channel.get()))
-    left_channel_radio_btn.pack()
-    right_channel_radio_btn.pack()
-    btn_transcribe.pack()
+    radio_button_label.pack(padx=5, pady=5, side="left")
+    left_channel_radio_btn.pack(padx=5, pady=5, side="left")
+    right_channel_radio_btn.pack(padx=5, pady=5, side="left")
+    btn_transcribe.pack(padx=5, pady=5)
 
     diagnostic_log = tk.Text(master=diagnostic_log_frame, state="disabled", bg="black", fg="white")
     diagnostic_log.pack(fill="both", expand=True)
