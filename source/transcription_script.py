@@ -1,5 +1,5 @@
-import movReader
-from movReader import MOV_EXTENSION, WAV_EXTENSION
+import mov_reader
+from mov_reader import MOV_EXTENSION, WAV_EXTENSION
 from transcriber import transcribe
 import os
 from waveform import Waveform
@@ -15,7 +15,7 @@ def main_script(source_file_path: str, output_dir: str, model_dir: str, channel:
 
     if str.lower(audio_file_extension) == MOV_EXTENSION:
         print(f"Reading MOV file at: {source_file_path}")
-        wav_filepath = movReader.extract_audio(source_file_path)
+        wav_filepath = mov_reader.extract_audio(source_file_path)
 
     elif str.lower(audio_file_extension) == WAV_EXTENSION:
         print(f"Reading WAV file at: {source_file_path}")
