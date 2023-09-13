@@ -9,7 +9,7 @@ import json
 from collections import deque
 
 
-def main_script(source_file_path: str, output_dir: str, model_dir: str):
+def main_script(source_file_path: str, output_dir: str, model_dir: str, channel: int):
     audio_filepath, audio_file_extension = os.path.splitext(source_file_path)
     wav_filepath = ""
 
@@ -34,13 +34,22 @@ def main_script(source_file_path: str, output_dir: str, model_dir: str):
     print("Time (s): ", waveform.get_audio_sample_time())
     print("Compression type: ", waveform.compression_type)
 
-    for signal in waveform.get_signal():
-        time = len(signal) / waveform.framerate
-        plt.plot(np.linspace(0, time, num=len(signal)), signal)
-    plt.show()
+    # for signal in waveform.get_signal():
+    #     time = len(signal) / waveform.framerate
+    #     plt.plot(np.linspace(0, time, num=len(signal)), signal)
+    # plt.show()
 
-    left, right = waveform.get_raw_signals()
-    result = transcribe(right, waveform.framerate, model_dir)  # TODO: average the 2 channels
+    channels = waveform.get_raw_signals()
+
+    if len(channels) > 2 or len(channels) < 1:
+        raise ValueError(f"Must be mono (1 channel) or stereo (2 channels) format, "
+                         f"but audio signal contains {len(channels)} channels.")
+
+    signal = channels[0]
+    if len(channels) == 2 and channel == 1:
+        signal = channels[1]
+
+    result = transcribe(signal, waveform.framerate, model_dir)
     json_result = json.loads(result)
     for text in json_result.values():
         print(text)
@@ -58,10 +67,3 @@ def main_script(source_file_path: str, output_dir: str, model_dir: str):
 
             for word in text:
                 file.write(word + ' ')
-
-    # with wave.open('combined_single_channel.wav', 'wb') as wav_file:
-    #     wav_file.setnchannels(1)
-    #     wav_file.setsampwidth(waveform.sample_width)
-    #     wav_file.setframerate(waveform.framerate)
-    #     wav_file.setnframes(waveform.num_frames)
-    #     wav_file.writeframes(left)

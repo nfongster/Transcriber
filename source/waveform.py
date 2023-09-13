@@ -37,6 +37,10 @@ class Waveform:
         return list(signal[ch::self.num_channels] for ch in range(self.num_channels))
 
     def get_raw_signals(self):
+        """
+        Gets a list of all audio signals.
+        :return: List of all audio signals as byte arrays, typically of length 1 (mono) or 2 (stereo).
+        """
         signal = np.frombuffer(self._raw_signal, dtype="int16")
         signals = list(signal[ch::self.num_channels] for ch in range(self.num_channels))
-        return bytes(signals[0]), bytes(signals[1])
+        return [bytes(s) for s in signals]

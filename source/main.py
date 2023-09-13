@@ -8,6 +8,11 @@ BACKGROUND_COLOR = "#57749B"
 BUTTON_COLOR = "gray"
 TRANSCRIBE_COLOR = "red"
 
+channel_dict = {
+    0: "Left",
+    1: "Right"
+}
+
 
 def open_file(entry):
     file_path = filedialog.askopenfilename(
@@ -37,7 +42,7 @@ def update_diagnostic_log(text, diagnostic_log, print_to_console=True):
     diagnostic_log.config(state="disabled")
 
 
-def transcribe(source_file: str, output_dir: str, model_dir: str, diagnostic_log):
+def transcribe(source_file: str, output_dir: str, model_dir: str, diagnostic_log, channel: int):
     if (source_file is None) or (output_dir is None) or (model_dir is None) \
             or (source_file == '') or (output_dir == '') or (model_dir == ''):
         messagebox.showerror("Error",
@@ -47,13 +52,15 @@ def transcribe(source_file: str, output_dir: str, model_dir: str, diagnostic_log
     update_diagnostic_log(f"Source file: {source_file}", diagnostic_log)
     update_diagnostic_log(f"Output directory: {output_dir}", diagnostic_log)
     update_diagnostic_log(f"Model directory: {model_dir}\n", diagnostic_log)
-    update_diagnostic_log("Beginning transcription...\n", diagnostic_log)
+    update_diagnostic_log(f"Beginning transcription ({channel_dict[channel]} channel)...\n", diagnostic_log)
 
     try:
-        main_script(source_file, output_dir, model_dir)
+        main_script(source_file, output_dir, model_dir, channel)
+
     except Exception as ex:
         update_diagnostic_log(f"Exception during transcription: {ex}", diagnostic_log)
         update_diagnostic_log("Failed transcription attempt.", diagnostic_log)
+
     finally:
         update_diagnostic_log("Transcription attempt complete.", diagnostic_log)
 
@@ -102,6 +109,11 @@ def main():
     ety_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
 
+    channel = tk.IntVar(value=0)  # 0 for left, 1 for right
+
+    left_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame, text="Left", variable=channel, value=0)
+    right_channel_radio_btn = tk.Radiobutton(master=transcribe_btn_frame, text="Right", variable=channel, value=1)
+
     btn_transcribe = tk.Button(master=transcribe_btn_frame,
                                text="Transcribe",
                                width=15,
@@ -109,7 +121,10 @@ def main():
                                command=lambda: transcribe(ety_source_file.get(),
                                                           ety_output_dir.get(),
                                                           ety_model_dir.get(),
-                                                          diagnostic_log))
+                                                          diagnostic_log,
+                                                          channel.get()))
+    left_channel_radio_btn.pack()
+    right_channel_radio_btn.pack()
     btn_transcribe.pack()
 
     diagnostic_log = tk.Text(master=diagnostic_log_frame, state="disabled", bg="black", fg="white")
