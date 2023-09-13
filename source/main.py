@@ -23,6 +23,12 @@ def open_folder(entry):
         entry.configure(state="readonly")
 
 
+def transcribe(ety_source_file, ety_output_dir, ety_model_dir):
+    print(f"Source file: {ety_source_file.get()}")
+    print(f"Output directory: {ety_output_dir.get()}")
+    print(f"Model directory: {ety_model_dir.get()}")
+
+
 def main():
     window = tk.Tk()
     window.geometry("700x350")
@@ -59,7 +65,9 @@ def main():
     ety_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
 
-    btn_transcribe = tk.Button(master=transcribe_btn_frame, text="Transcribe")
+    btn_transcribe = tk.Button(master=transcribe_btn_frame,
+                               text="Transcribe",
+                               command=lambda: transcribe(ety_source_file, ety_output_dir, ety_model_dir))
     btn_transcribe.pack()
 
     label4 = tk.Label(master=right_frame, text="Fourth Label")
