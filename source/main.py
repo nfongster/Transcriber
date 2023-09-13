@@ -41,27 +41,34 @@ def main():
     btn_source_file = tk.Button(master=source_file_frame,
                                 text="File location (*.wav or *.mov)",
                                 command=lambda: open_file(ety_source_file))
+    ety_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
+    btn_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
 
     ety_output_dir = tk.Entry(master=output_dir_frame, state="readonly", width=60)
     btn_output_dir = tk.Button(master=output_dir_frame,
                                text="Output directory",
                                command=lambda: open_folder(ety_output_dir))
-
-    # label2 = tk.Label(master=output_dir_frame, text="Second Label")
-    # label3 = tk.Label(master=model_dir_frame, text="Third Label")
-    # btn_transcribe = tk.Button(master=transcribe_btn_frame, text="Transcribe")
-
-    btn_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
-    ety_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
-    btn_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
     ety_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
-    # btn_transcribe.pack()
+    btn_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+
+    ety_model_dir = tk.Entry(master=model_dir_frame, state="readonly", width=60)
+    btn_model_dir = tk.Button(master=model_dir_frame,
+                              text="Model directory",
+                              command=lambda: open_folder(ety_model_dir))
+
+    ety_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
+    btn_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+
+    btn_transcribe = tk.Button(master=transcribe_btn_frame, text="Transcribe")
+    btn_transcribe.pack()
 
     label4 = tk.Label(master=right_frame, text="Fourth Label")
     label4.pack()
 
     source_file_frame.pack(padx=5, pady=5, fill=tk.X)
     output_dir_frame.pack(padx=5, pady=5, fill=tk.X)
+    model_dir_frame.pack(padx=5, pady=5, fill=tk.X)
+    transcribe_btn_frame.pack(padx=5, pady=5, fill=tk.X)
     left_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
     right_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
 
