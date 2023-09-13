@@ -4,6 +4,11 @@ from movReader import MOV_EXTENSION, WAV_EXTENSION
 from mainScript import main_script
 
 
+BACKGROUND_COLOR = "#57749B"
+BUTTON_COLOR = "gray"
+TRANSCRIBE_COLOR = "red"
+
+
 def open_file(entry):
     file_path = filedialog.askopenfilename(
         filetypes=[("WAV Files", f"*{WAV_EXTENSION}"), ("MOV Files", f"*{MOV_EXTENSION}")]
@@ -42,7 +47,7 @@ def transcribe(source_file: str, output_dir: str, model_dir: str, diagnostic_log
     update_diagnostic_log(f"Source file: {source_file}", diagnostic_log)
     update_diagnostic_log(f"Output directory: {output_dir}", diagnostic_log)
     update_diagnostic_log(f"Model directory: {model_dir}\n", diagnostic_log)
-    update_diagnostic_log("Begin transcription...\n", diagnostic_log)
+    update_diagnostic_log("Beginning transcription...\n", diagnostic_log)
 
     try:
         main_script(source_file, output_dir, model_dir)
@@ -58,19 +63,22 @@ def main():
     window.geometry("700x350")
     window.resizable(False, False)
     window.title("Transcriber")
+    window.configure(bg=BACKGROUND_COLOR)
 
-    frame = tk.Frame()
+    window_frame = tk.Frame()
+    window_frame.config(bg=BACKGROUND_COLOR)
 
-    source_file_frame = tk.Frame(master=frame)
-    output_dir_frame = tk.Frame(master=frame)
-    model_dir_frame = tk.Frame(master=frame)
-    transcribe_btn_frame = tk.Frame(master=frame)
-    diagnostic_log_frame = tk.Frame(master=frame)
+    source_file_frame = tk.Frame(master=window_frame, bg=BACKGROUND_COLOR)
+    output_dir_frame = tk.Frame(master=window_frame, bg=BACKGROUND_COLOR)
+    model_dir_frame = tk.Frame(master=window_frame, bg=BACKGROUND_COLOR)
+    transcribe_btn_frame = tk.Frame(master=window_frame, bg=BACKGROUND_COLOR)
+    diagnostic_log_frame = tk.Frame(master=window_frame, bg=BACKGROUND_COLOR)
 
     ety_source_file = tk.Entry(master=source_file_frame, state="readonly", width=60)
     btn_source_file = tk.Button(master=source_file_frame,
                                 text="Source File (*.wav or *.mov)",
                                 width=15,
+                                bg=BUTTON_COLOR,
                                 command=lambda: open_file(ety_source_file))
     ety_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -79,6 +87,7 @@ def main():
     btn_output_dir = tk.Button(master=output_dir_frame,
                                text="Output Directory",
                                width=15,
+                               bg=BUTTON_COLOR,
                                command=lambda: open_folder(ety_output_dir))
     ety_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -87,6 +96,7 @@ def main():
     btn_model_dir = tk.Button(master=model_dir_frame,
                               text="Model Directory",
                               width=15,
+                              bg=BUTTON_COLOR,
                               command=lambda: open_folder(ety_model_dir))
 
     ety_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
@@ -95,13 +105,14 @@ def main():
     btn_transcribe = tk.Button(master=transcribe_btn_frame,
                                text="Transcribe",
                                width=15,
+                               bg=TRANSCRIBE_COLOR,
                                command=lambda: transcribe(ety_source_file.get(),
                                                           ety_output_dir.get(),
                                                           ety_model_dir.get(),
                                                           diagnostic_log))
     btn_transcribe.pack()
 
-    diagnostic_log = tk.Text(master=diagnostic_log_frame, state="disabled")
+    diagnostic_log = tk.Text(master=diagnostic_log_frame, state="disabled", bg="black", fg="white")
     diagnostic_log.pack(fill="both", expand=True)
 
     source_file_frame.pack(padx=5, pady=5, fill=tk.X)
@@ -109,7 +120,7 @@ def main():
     model_dir_frame.pack(padx=5, pady=5, fill=tk.X)
     transcribe_btn_frame.pack(padx=5, pady=5, fill=tk.X)
     diagnostic_log_frame.pack(padx=5, pady=5, fill=tk.X)
-    frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
+    window_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
 
     window.mainloop()
 
