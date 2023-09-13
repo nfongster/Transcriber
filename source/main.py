@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from movReader import MOV_EXTENSION, WAV_EXTENSION
+from mainScript import main_script
 
 
 def open_file(entry):
@@ -23,10 +24,12 @@ def open_folder(entry):
         entry.configure(state="readonly")
 
 
-def transcribe(ety_source_file, ety_output_dir, ety_model_dir):
-    print(f"Source file: {ety_source_file.get()}")
-    print(f"Output directory: {ety_output_dir.get()}")
-    print(f"Model directory: {ety_model_dir.get()}")
+def transcribe(source_file: str, output_dir: str, model_dir: str):
+    print(f"Source file: {source_file}")
+    print(f"Output directory: {output_dir}")
+    print(f"Model directory: {model_dir}\n")
+    print("Transcribing...\n")
+    main_script(source_file, output_dir, model_dir)
 
 
 def main():
@@ -67,7 +70,9 @@ def main():
 
     btn_transcribe = tk.Button(master=transcribe_btn_frame,
                                text="Transcribe",
-                               command=lambda: transcribe(ety_source_file, ety_output_dir, ety_model_dir))
+                               command=lambda: transcribe(ety_source_file.get(),
+                                                          ety_output_dir.get(),
+                                                          ety_model_dir.get()))
     btn_transcribe.pack()
 
     label4 = tk.Label(master=right_frame, text="Fourth Label")
