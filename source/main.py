@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from movReader import MOV_EXTENSION, WAV_EXTENSION
-from mainScript import main_script
+from transcription_script import main_script
 import threading
 
 
