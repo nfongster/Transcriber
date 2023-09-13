@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from movReader import MOV_EXTENSION, WAV_EXTENSION
 from mainScript import main_script
 
@@ -25,6 +25,12 @@ def open_folder(entry):
 
 
 def transcribe(source_file: str, output_dir: str, model_dir: str):
+    if (source_file is None) or (output_dir is None) or (model_dir is None) \
+            or (source_file == '') or (output_dir == '') or (model_dir == ''):
+        messagebox.showerror("Error",
+                             "The source file, output directory, and model directory must all be specified!")
+        return
+
     print(f"Source file: {source_file}")
     print(f"Output directory: {output_dir}")
     print(f"Model directory: {model_dir}\n")
@@ -38,8 +44,7 @@ def main():
     window.resizable(False, False)
     window.title("Transcriber")
 
-    left_frame = tk.Frame(bg="blue")
-    right_frame = tk.Frame(bg="green")
+    left_frame = tk.Frame()
 
     source_file_frame = tk.Frame(master=left_frame)
     output_dir_frame = tk.Frame(master=left_frame)
@@ -49,6 +54,7 @@ def main():
     ety_source_file = tk.Entry(master=source_file_frame, state="readonly", width=60)
     btn_source_file = tk.Button(master=source_file_frame,
                                 text="File location (*.wav or *.mov)",
+                                width=15,
                                 command=lambda: open_file(ety_source_file))
     ety_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_source_file.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -56,6 +62,7 @@ def main():
     ety_output_dir = tk.Entry(master=output_dir_frame, state="readonly", width=60)
     btn_output_dir = tk.Button(master=output_dir_frame,
                                text="Output directory",
+                               width=15,
                                command=lambda: open_folder(ety_output_dir))
     ety_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
     btn_output_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -63,6 +70,7 @@ def main():
     ety_model_dir = tk.Entry(master=model_dir_frame, state="readonly", width=60)
     btn_model_dir = tk.Button(master=model_dir_frame,
                               text="Model directory",
+                              width=15,
                               command=lambda: open_folder(ety_model_dir))
 
     ety_model_dir.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
@@ -70,20 +78,17 @@ def main():
 
     btn_transcribe = tk.Button(master=transcribe_btn_frame,
                                text="Transcribe",
+                               width=15,
                                command=lambda: transcribe(ety_source_file.get(),
                                                           ety_output_dir.get(),
                                                           ety_model_dir.get()))
     btn_transcribe.pack()
-
-    label4 = tk.Label(master=right_frame, text="Fourth Label")
-    label4.pack()
 
     source_file_frame.pack(padx=5, pady=5, fill=tk.X)
     output_dir_frame.pack(padx=5, pady=5, fill=tk.X)
     model_dir_frame.pack(padx=5, pady=5, fill=tk.X)
     transcribe_btn_frame.pack(padx=5, pady=5, fill=tk.X)
     left_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.LEFT, expand=True)
-    right_frame.pack(padx=5, pady=5, fill=tk.BOTH, side=tk.RIGHT, expand=True)
 
     window.mainloop()
 
