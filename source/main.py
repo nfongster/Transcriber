@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from movReader import MOV_EXTENSION, WAV_EXTENSION
 from mainScript import main_script
+import threading
 
 
 BACKGROUND_COLOR = "#57749B"
@@ -55,7 +56,10 @@ def transcribe(source_file: str, output_dir: str, model_dir: str, diagnostic_log
     update_diagnostic_log(f"Beginning transcription ({channel_dict[channel]} channel)...\n", diagnostic_log)
 
     try:
-        main_script(source_file, output_dir, model_dir, channel)
+        # main_script(source_file, output_dir, model_dir, channel)
+        thread = threading.Thread(target=main_script(source_file, output_dir, model_dir, channel))
+        thread.start()
+        thread.join()
 
     except Exception as ex:
         update_diagnostic_log(f"Exception during transcription: {ex}", diagnostic_log)
